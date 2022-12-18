@@ -34,4 +34,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('api/auth/', include('djoser.urls')),
     path('api/registr/', views.RegistViewset.as_view(), name='registr'),
+    # path('auth/', include('djoser.urls')),
+    # path('auth/', include('djoser.urls.jwt')),
+    # path("api/accounts/", include("accounts.urls"))
 ]

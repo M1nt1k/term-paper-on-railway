@@ -3,11 +3,11 @@ from .models import *
 
 class TrainSerializer(serializers.ModelSerializer):
     carriages = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    addons = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    train_addons = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Train
-        fields = ['id', 'name', 'start_time', 'end_time', 'start_city', 'end_city', 'carriages', 'addons']
+        fields = ['id', 'name', 'start_time', 'end_time', 'start_city', 'end_city', 'carriages', 'train_addons']
 
     def to_representation(self, instance):
         response = super().to_representation(instance)
@@ -17,23 +17,23 @@ class TrainSerializer(serializers.ModelSerializer):
         return response
 
 class TicketSerializer(serializers.ModelSerializer):
-    profile = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    train = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    carriage = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    place = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # profile = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # train = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # carriage = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # place = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Ticket
-        fields = fields = ['id', 'profile', 'train', 'carriage', 'place']
+        fields = fields = ['id', 'profile', 'train', 'carriage', 'places']
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.email')
-    city = serializers.ReadOnlyField(source='city.name')
-    ticket = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # user = serializers.ReadOnlyField(source='user.email')
+    # city = serializers.ReadOnlyField(source='city.name')
+    tickets = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['id', 'user', 'birthday', 'pass_serial', 'pass_number', 'ticket', 'city']
+        fields = ['id', 'user', 'first_name', 'last_name', 'third_name', 'birthday', 'pass_serial', 'pass_number', 'tickets']
 
 class CitySerializer(serializers.ModelSerializer):
     train = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
@@ -43,24 +43,28 @@ class CitySerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'train']
 
 class CarriageSerializer(serializers.ModelSerializer):
-    # places = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    train = serializers.ReadOnlyField(source='train.name')
+    places = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # train = serializers.ReadOnlyField(source='train.name')
 
     class Meta:
         model = Carriage
-        fields = ['id', 'train', 'place_type', 'places']
+        fields = ['id', 'train', 'number', 'place_type', 'places']
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['train'] = instance.train.name
+
+        return response
 
 class PlacesSerializer(serializers.ModelSerializer):
     profile = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    carriage = serializers.ReadOnlyField(source='carriage.name')
+    # carriage = serializers.ReadOnlyField(source='carriage.name')
 
     class Meta:
         model = Places
         fields = ['id', 'carriage', 'profile', 'number', 'status']
 
 class AddonsSerializer(serializers.ModelSerializer):
-    train = serializers.ReadOnlyField(source='train.name')
-
     class Meta:
         model = Addons
         fields = ['id', 'addon', 'train']

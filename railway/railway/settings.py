@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ox6!tt2v!tm=z7__k1w5z%&$&!j-x3*_^2+zvg6sops_2zurlp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'mintik.site', 'www.mintik.site']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'mintik.site', 'www.mintik.site']
 
 
 # Application definition
@@ -106,12 +106,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
 
@@ -138,3 +138,5 @@ DJOSER = {
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': False,
 }
+
+DATETIME_FORMAT = '%d/%m/%Y %H:%M'

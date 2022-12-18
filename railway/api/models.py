@@ -2,6 +2,9 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 class MyUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         if not email: 
@@ -24,9 +27,7 @@ class MyUserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True, unique=True) # Идентификатор
     email = models.EmailField(max_length=100, unique=True) # Email
-    first_name = models.CharField(max_length=255, null=True, blank=True)
-    last_name = models.CharField(max_length=255, null=True, blank=True)
-    third_name = models.CharField(max_length=255, null=True, blank=True)
+    
     is_active = models.BooleanField(default=True) # Статус активации
     is_staff = models.BooleanField(default=False) # Статус админа
 
@@ -44,7 +45,9 @@ class Profile(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
-    
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    third_name = models.CharField(max_length=255, null=True, blank=True)
     birthday = models.DateField(blank=True)
 
     pass_serial = models.IntegerField()
@@ -70,10 +73,10 @@ class Ticket(models.Model):
     train = models.ForeignKey('Train', related_name='tickets', on_delete=models.DO_NOTHING)
     carriage = models.ForeignKey('Carriage', related_name='tickets', on_delete=models.DO_NOTHING)
 
-    place = models.IntegerField()
+    places = models.ForeignKey('Places', related_name='tickets', on_delete=models.DO_NOTHING)
 
     def __str__(self) -> str:
-        return self.name
+        return self.train + '-' + str(self.place)
 
 class City(models.Model):
     name = models.CharField(max_length=255, db_index=True)
@@ -97,17 +100,17 @@ class Carriage(models.Model):
     )
     
     def __str__(self) -> str:
-        return self.train.name + '-' + self.place_type
+        return self.train.name + '-' + str(self.number) + '-' + self.place_type
     
 
 class Places(models.Model):
     carriage = models.ForeignKey('Carriage', related_name='places', on_delete=models.CASCADE)
-    profile = models.ManyToManyField('Profile', related_name='places')
+    # profile = models.ManyToManyField('Profile', related_name='places')
     number = models.IntegerField()
     status = models.BooleanField(default=True)
 
     def __str__(self) -> str:
-        return str(self.number)
+        return str(self.number) + '-' + str(self.carriage.number)
 
 class Addons(models.Model):
     addons = [
@@ -126,3 +129,5 @@ class Addons(models.Model):
 
     def __str__(self) -> str:
         return self.train.name
+
+
