@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import *
+from user.models import User
+from rails.models import *
 
 class TrainSerializer(serializers.ModelSerializer):
     carriages = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
@@ -24,7 +26,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = fields = ['id', 'profile', 'train', 'carriage', 'places']
+        fields  = ['id', 'user', 'train', 'carriage', 'places']
 
 class ProfileSerializer(serializers.ModelSerializer):
     # user = serializers.ReadOnlyField(source='user.email')
@@ -32,8 +34,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     tickets = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
-        model = Profile
-        fields = ['id', 'user', 'first_name', 'last_name', 'third_name', 'birthday', 'pass_serial', 'pass_number', 'tickets']
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'third_name', 'birthday', 'tickets']
 
 class CitySerializer(serializers.ModelSerializer):
     train = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
@@ -62,28 +64,4 @@ class PlacesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Places
-        fields = ['id', 'carriage', 'profile', 'number', 'status']
-
-class AddonsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Addons
-        fields = ['id', 'addon', 'train']
-
-class UserRegistrSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField()
-
-    class Meta:
-        model = User
-        fields = ['email', 'password', 'password2']
-
-    def save(self, *args, **kwargs):
-        user = User(
-            email=self.validated_data['email']
-        )
-        password = self.validated_data['password']
-        password2 = self.validated_data['password2']
-        if password != password2:
-            raise serializers.ValidationError({password: "Пароль не совпадает"})
-        user.set_password(password)
-        user.save()
-        return user
+        fields = ['id', 'carriage', 'user', 'number', 'status']

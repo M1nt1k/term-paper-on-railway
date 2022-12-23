@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+ 
+{% block title %}RailWay - {{train.name}}{% endblock %}
+ 
+{% block content %}
+<div class="card mb-3">
+    <h3 class="card-header">Поезд <span class="badge bg-danger">{{request.train.name}}</span></h3>
+    <div class="card-body">
+        <div class="mb-3 d-flex">
+            <div class="container-fluid p-3">
+                <h5 class="card-title">Время</h5>
+                <div class="">
+                    <p class="card-text">Отправление: {{train.start_date}} - {{train.start_time}}</p>
+                    <p class="card-text">Прибытие: {{train.end_date}} - {{train.end_time}}</p>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <h5 class="card-title">Место</h5>
+                <p class="card-text">Отправление: {{train.start_city}}</p>
+                <p class="card-text">Прибытие: {{train.end_city}}</p>
+            </div>
+        </div>
+
+        <div class="mb-3 d-flex">
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" id="id_train" name="train">
+                <div class="input-group m-3">
+                    <label class="input-group-text" for="id_carriage">Вагон</label>
+                    <select id="inputGroupSelect01 id_carriage" name="carriage" class="form-select" aria-label="Default select example">
+                        <option selected>Выберите вагон</option>
+                        {% for carriage in train.carriages.all %}
+                        
+                        <option value="{{car.id}}">{{carriage.number}} - {{carriage.place_type}}</option>
+                        
+                        {% endfor %}
+                      </select>
+                </div>
+                <div class="input-group m-3">
+                    <label class="input-group-text" for="id_places">Место</label>
+                    <select id="inputGroupSelect02 id_places" name="places" class="form-select" aria-label="Default select example">
+                        <option selected>Выберите место</option>
+                        {% for carriage in train.carriages.all %}
+                            {% for place in carriage.places.all %}
+                                {% if place.status %}
+                                    <option value="{{car.id}}">{{place.number}}</option>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                      </select>
+                </div>
+
+                <button class="btn btn-danger m-3"  type="submit">Купить</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

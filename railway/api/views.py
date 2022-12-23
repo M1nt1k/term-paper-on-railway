@@ -1,15 +1,18 @@
 from rest_framework import generics, permissions, viewsets
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAuthenticated
 
 from .serializers import *
 from .models import *
+from user.models import User
+from rails.models import *
 # from .permissions import IsOwnerOrReadOnly
 
 class ProfileViewset(viewsets.ModelViewSet):
-    queryset = Profile.objects.all()
+    queryset = User.objects.all()
     serializer_class = ProfileSerializer
+    permission_class = (IsAuthenticated,)
 
     # def perform_create(self, serializer):
     #     serializer.save(owner=self.request.user)
@@ -17,10 +20,12 @@ class ProfileViewset(viewsets.ModelViewSet):
 class TrainViewset(viewsets.ModelViewSet):
     queryset = Train.objects.all()
     serializer_class = TrainSerializer
+    permission_class = (AllowAny,)
 
 class CarriageViewset(viewsets.ModelViewSet):
     queryset = Carriage.objects.all()
     serializer_class = CarriageSerializer
+    permission_class = (AllowAny,)
 
 class TicketViewset(viewsets.ModelViewSet):
     queryset = Ticket.objects.all()
@@ -32,28 +37,13 @@ class TicketViewset(viewsets.ModelViewSet):
 class CityViewset(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
+    permission_class = (AllowAny,)
 
 class PlacesViewset(viewsets.ModelViewSet):
     queryset = Places.objects.all()
     serializer_class = PlacesSerializer
+    permission_class = (AllowAny,)
 
-class AddonsViewset(viewsets.ModelViewSet):
-    queryset = Addons.objects.all()
-    serializer_class = AddonsSerializer
 
-class RegistViewset(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserRegistrSerializer
-    permission_classes = [AllowAny]
 
-    def post(self, request, *args, **kwargs):
-        serializer = UserRegistrSerializer(data=request.data)
-        data = {}
-        if serializer.is_valid():
-            serializer.save()
-            data['response'] = True
-            return Response(data, status=status.HTTP_200_OK)
-        else:
-            data = serializer.errors
-            return Response(data)
 

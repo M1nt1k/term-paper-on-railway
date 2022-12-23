@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+ 
+{% block title %}RailWay - Login{% endblock %}
+
+{% block content %}
+
+<div class="container-lg">
+    <h2 class="m-3">Вход в аккаунт</h2>
+
+    <form action="{% url 'login' %}" method="post">
+    {% csrf_token %}
+
+    <div class="form-floating m-3">
+        <input type="email" name="email" class="form-control" id="floatingInput id_email" max_length="100" placeholder="name@example.com">
+        <label for="floatingInput">{{form.email.label}}</label>
+    </div>
+    <div class="form-floating m-3">
+        <input type="password" name="password" class="form-control" id="floatingPassword id_password" max_length="100" placeholder="Password" required>
+        <label for="floatingPassword">{{form.password.label}}</label>
+    </div>
+
+    <!-- {{ form.as_p }} -->
+    <!-- is-invalid -->
+    <button class="btn btn-danger m-3" type="submit">Войти</button>
+    </form>
+</div>
+
+{% endblock %}

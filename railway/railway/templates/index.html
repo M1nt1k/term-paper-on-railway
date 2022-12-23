@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}RailWay{% endblock %}
+ 
+{% block content %}
+
+<div class="container-lg  p-4">
+    <h2 class="p-3">Купить билет</h2>
+
+    <div class="city_group">
+        <form action="{% url 'trains' %}" method="get">
+            <div class="input-group m-3">
+                <label class="input-group-text" for="id_start_city">{{form.start_city.label}}</label>
+                <select name="start_city" required class="form-select p-2" id="inputGroupSelect01 id_start_city">
+                <option value selected>Откуда</option>
+                {% for city in city_list %}
+                    <option value="{{city.id}}">{{city.name}}</option>
+                {% endfor %}
+                </select>
+            </div>
+        
+            <div class="input-group m-3">
+                <label class="input-group-text" for="id_end_city">{{form.end_city.label}}</label>
+                <select name="end_city" required class="form-select p-2" id="inputGroupSelect02 id_end_city">
+                <option value selected>Куда</option>
+                {% for city in city_list %}
+                    <option value="{{city.id}}">{{city.name}}</option>
+                {% endfor %}
+                </select>
+            </div>
+
+            <div class="input-group m-3">
+                <label class="input-group-text" for="id_start_date">{{form.start_date.label}}</label>
+                <input name="start_date" required class="p-2" type="date" id="inputGroupSelect03 id_start_date">
+            </div>
+            <!-- {{ form.as_p }} -->
+            <button class="btn btn-danger m-3" type="submit">Найти</button>
+        </form>
+        {% block javascript %}  {% endblock javascript %}
+    </div>
+</div>
+
+{% endblock %}

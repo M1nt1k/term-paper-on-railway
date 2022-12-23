@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+ 
+{% block title %}RailWay{% endblock %}
+
+{% block content %}
+<div class="container-fluid ">
+    {% if trains_list %}
+    {% for train in trains_list %}
+    <div class="card mb-3">
+        <h3 class="card-header">Поезд <span class="badge bg-danger">{{train.name}}</span></h3>
+        <div class="card-body">
+            <div class="mb-3 d-flex">
+                <div class="container-fluid p-3">
+                    <h5 class="card-title">Время</h5>
+                    <div class="">
+                        <p class="card-text">Отправление:<br>{{train.start_date}}<br>{{train.start_time}}</p>
+                        <p class="card-text">Прибытие:<br>{{train.end_date}}<br>{{train.end_time}}</p>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <h5 class="card-title">Место</h5>
+                    <p class="card-text">Отправление: {{train.start_city}}</p>
+                    <p class="card-text">Прибытие: {{train.end_city}}</p>
+                </div>
+            </div>
+            
+            <a href="/train/{{train.slug}}" class="btn btn-danger">Купить</a>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <h2 class="p-3">Нет поездов</h2>
+    {% endif %}
+</div>
+{% endblock %}
