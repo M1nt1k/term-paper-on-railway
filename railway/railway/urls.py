@@ -17,7 +17,7 @@ router_rails = routers.DefaultRouter(trailing_slash=False)
 
 urlpatterns = [
     # Админка
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     
     # # API
     path('api/v1/', include(router.urls)),
@@ -29,6 +29,7 @@ urlpatterns = [
     # Сайт
     path('', vrails.MainView.as_view(), name='index'),
     path('profile/', vrails.ProfileView.as_view(), name='profile'),
+    path('profile/<int:pk>/', vrails.UpdateProfile.as_view(), name='update_profile'),
     path('trains/', vrails.TrainsView.as_view(), name='trains'),
     path('train/<slug:slug>/', vrails.TrainDetailView.as_view(), name='train'),
     path('buy/<int:pk>/', vrails.BuyTicket.as_view(), name='buy'),

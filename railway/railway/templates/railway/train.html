@@ -26,33 +26,71 @@
                 {% csrf_token %}
                 <input type="hidden" value="{{train.id}}" name="train">
                 <input type="hidden" value="{{request.user.id}}" name="user">
+                
                 <div class="input-group m-3">
                     <label class="input-group-text" for="id_carriage">Вагон</label>
-                    <select required id="inputGroupSelect01 id_carriage" name="carriage" class="form-select" aria-label="Default select example">
+                    <select required id="inputGroupSelect01 id_carriage" name="carriage" class="car form-select" aria-label="Default select example">
                         <option selected>Выберите вагон</option>
+                        
                         {% for carriage in train.carriages.all %}
                         <option value="{{carriage.id}}">{{carriage.number}} - {{carriage.place_type}}</option>
                         {% endfor %}
                       </select>
                 </div>
-                <div class="input-group m-3">
-                    <label class="input-group-text" for="id_places">Место</label>
-                    <select id="inputGroupSelect02 id_places" required name="places" class="form-select" aria-label="Default select example">
+                <divsel  id="sel {{carriage.id}}_select" sel class="input-group m-3">
+                    <label class="input-group-text" for="inputGroupSelect02">Место</label>
+                    <select id="inputGroupSelect02" required name="places" class="form-select" aria-label="Default select example">
                         <option selected>Выберите место</option>
-                        {% for carriage in train.carriages.all %}
+                        
+                            {% for carriage in train.carriages.all %}
+                        
                             {% for place in carriage.places.all %}
-                                {% if place.status%}
-                                    <option value="{{place.id}}">{{place.number}} - {{carriage.number}}</option>
+                                {% if place.status and place.carriage.id == carriage.id %}
+                                    <option id="change_{{place.id}}" value="{{place.id}}">{{place.number}} - {{carriage.number}}</option>
                                 {% endif %}
                             {% endfor %}
-                        {% endfor %}
+                        
+                            {% endfor %}
                       </select>
-                </div>
-                {{ form.as_p }}
+                </divsel>
+                <!-- <input type="" value="" id="id_places" name=""> -->
+
                 <button class="btn btn-danger m-3"  type="submit">Купить</button>
             </form>
         </div>
-        
+        <!-- <script type="text/javascript">
+            let sel_elements = document.getElementsByTagName('divsel')
+            console.log(sel_elements);
+            let select = document.getElementsByClassName('car')[0];
+            let num = 0;
+            let inp = document.getElementById("id_places");
+
+
+            select.addEventListener('change', function(){  
+                sel_elements[num].setAttribute('hidden', 'hidden');
+                var getValue = this.value - 1;
+                sel_elements[getValue].removeAttribute('hidden');
+                sel_elements[getValue].addEventListener('change', function(){
+                    let items = [];
+                    // const inputGroupSelect02 = document.getElementById("inputGroupSelect02").text;
+                    for (const child of inputGroupSelect02.children) {
+                        items.push(child)
+                    }
+                    let v = items[-1];
+                    console.log(v)
+                    inp.setAttribute('value', v)
+                });
+                num = getValue;
+            });
+            
+            // let items = [];
+            // const inputGroupSelect02 = document.getElementById("inputGroupSelect02");
+            // for (const child of inputGroupSelect02.children) {
+            //     console.log(child.tagName); 
+            //     items.push(child);  
+            //     console.log(items);
+            // }
+        </script> -->
         <!-- <a href="/train/{{train.slug}}" class="btn btn-danger">Купить</a> -->
     </div>
 </div>

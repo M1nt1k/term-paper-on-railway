@@ -31,13 +31,21 @@
 
             <div class="input-group m-3">
                 <label class="input-group-text" for="id_start_date">{{form.start_date.label}}</label>
-                <input name="start_date" required class="p-2" type="date" id="inputGroupSelect03 id_start_date">
+                <input name="start_date" required class="p-2" type="date"  min="2022-12-23" id="inputGroupSelect03 id_start_date">
             </div>
-            <!-- {{ form.as_p }} -->
+            <script>
+                var date = new Date();
+                const now = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+                const input = document.getElementsByName("start_date");
+                console.log(input);
+                input[0].setAttribute('min', now);
+            
+            </script>
             <button class="btn btn-danger m-3" type="submit">Найти</button>
         </form>
-        {% block javascript %}  {% endblock javascript %}
     </div>
 </div>
+
+
 
 {% endblock %}

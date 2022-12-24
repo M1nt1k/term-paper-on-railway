@@ -63,30 +63,54 @@ class BuyTicket(LoginRequiredMixin, View):
         form = BuyForm(request.POST)
         if form.is_valid():
             print(form.data)
+            pkg = form.data['carriage']
+            place_n = form.data['places']
+            carriages = Carriage.objects.filter(id=pkg)
+            carriage = carriages[0]
+            print(carriage.id)
+            places = Places.objects.filter(carriage_id=carriage.id, id=place_n)
+            place = places[0]
+            place.status = False
+            print(place)
+            place.save()
             form.save()
             return redirect('index')
 
 
 class ProfileView(DataMixin, FormView):
-    # model = User
+    model = User
     form_class = ProfileForm
     template_name = 'railway/profile.html'
     context_object_name = 'user'
-    succes_url = reverse_lazy('profile')
 
     def get_context_data(self, *, object_list = None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context()
         return dict(list(context.items()) + list(c_def.items()))
 
-    def form_valid(self, form):
-        print(form)
+class UpdateProfile(View):
+    def post(self, request, pk, *args, **kwargs):
+        return self.put(request, pk, *args, **kwargs)
+        
+    def put(self, request, pk, *args, **kwargs):
+        # print(request)
+        model = ProfileForm
+        form = model(request.POST)
+        users = User.objects.filter(id=pk)
+        user = users[0]
+        if form.is_valid():
+            user.first_name = form.data['first_name']
+            user.last_name = form.data['last_name']
+            user.third_name = form.data['third_name']
+            print(user.first_name, user.last_name, user.third_name)
+            
+            user.save()
         return redirect('profile')
 
 class RegView(DataMixin, CreateView):
     form_class = RegForm
     template_name = 'railway/registration.html'
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('profile')
 
     def get_context_data(self, *, object_list = None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -96,7 +120,7 @@ class RegView(DataMixin, CreateView):
     def form_valid(self, form):
         email = form.save()
         login(self.request, email)
-        return redirect('index')
+        return redirect('profile')
 
 class LoginView( DataMixin, LoginView):
     form_class = LoginForm

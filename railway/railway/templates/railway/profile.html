@@ -7,7 +7,7 @@
 <div class="container-lg mb-5">
     <h2 class="m-3">Аккаунт</h2>
 
-    <form action="{% url 'profile' %}" method="post">
+    <form action="{% url 'update_profile' request.user.id %}" method="post">
     {% csrf_token %}
 
     <div class="input-group m-3">
@@ -28,15 +28,11 @@
     </div>
     <div class="input-group m-3">
         <label class="input-group-text" for="id_third_name">Отчество&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-        {% if request.user.third_name %}
-        <input name="third_name" required value="{{ request.user.third_name }}" class="form-control p-2" type="text" id="id_third_name">
-        {% else %}
-        <input name="third_name" required class="form-control p-2" type="text" id="id_third_name">
-        {% endif%}
+        <input name="third_name" required {% if request.user.third_name %} value="{{ request.user.third_name }}" {% endif%} class="form-control p-2" type="text" id="id_third_name">
     </div>
     <div class="input-group m-3">
         <label class="input-group-text" for="id_email">E-mail&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-        <input style="background-color: #fff; color: #000;" name="email" disabled value="{{ request.user.email }}" required class="form-control p-2" type="email" id="id_email">
+        <input style="background-color: #fff; color: #000;" disabled value="{{ request.user.email }}" class="form-control p-2" type="email" id="id_email">
     </div>
     <!-- <div class="input-group m-3">
         <label class="input-group-text" for="id_password">Пароль&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -73,7 +69,7 @@
                 </div>
                 <div class="container-fluid">
                     <h5 class="card-title">Место</h5>
-                    <p class="card-text">Номер: {{t.carriage.place.number}}</p>
+                    <p class="card-text">Номер: {{t.places.number}}</p>
                 </div>
             </div>
         </div>

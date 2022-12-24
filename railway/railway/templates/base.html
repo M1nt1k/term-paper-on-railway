@@ -21,6 +21,9 @@
 
           <div class="btn btn-danger">
             {% if request.user.is_authenticated %}
+            {% if request.user.is_staff %}
+            <a style="color: white; text-decoration: none;" href="/admin/" role="button">Администрирование</a>&nbsp;|&nbsp;
+            {% endif%}
             <a style="color: white; text-decoration: none;" href="{% url 'profile' %}" role="button">{{request.user.email}}</a>&nbsp;|&nbsp;<a style="color: white; text-decoration: none;" href="{% url 'logout' %}" role="button">Выйти</a>
             {% else %}
             <a style="color: white; text-decoration: none;" href="{% url 'login' %}" role="button">Войти</a>&nbsp;|&nbsp;<a style="color: white; text-decoration: none;" href="{% url 'reg' %}" role="button">Регистрация</a>
